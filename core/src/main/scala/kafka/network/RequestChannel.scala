@@ -1,20 +1,3 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package kafka.network
 
 import java.nio.ByteBuffer
@@ -42,7 +25,7 @@ import scala.jdk.OptionConverters.RichOption
 import scala.reflect.ClassTag
 
 object RequestChannel extends Logging {
-  private val requestLogger = Logger("kafka.request.logger")
+  private val requestLogger = Logger("kafka.request.logger") // 출력값이 뭐가 나올까?
 
   private val RequestQueueSizeMetric = "RequestQueueSize"
   private val ResponseQueueSizeMetric = "ResponseQueueSize"
@@ -50,9 +33,9 @@ object RequestChannel extends Logging {
 
   private def isRequestLoggingEnabled: Boolean = requestLogger.underlying.isDebugEnabled
 
-  sealed trait BaseRequest
-  case object ShutdownRequest extends BaseRequest
-  case object WakeupRequest extends BaseRequest
+  sealed trait BaseRequest // 추상 트레잇: 요청의 종류에 관계없이 동일한 방식으로 처리
+  case object ShutdownRequest extends BaseRequest // 서버 종료 요청
+  case object WakeupRequest extends BaseRequest // 서버 시작 요청
 
   case class CallbackRequest(fun: RequestLocal => Unit,
                              originalRequest: Request) extends BaseRequest
