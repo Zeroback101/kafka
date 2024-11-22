@@ -9,6 +9,8 @@ import java.util.Objects;
  * When each request is handled by one thread, efficient data structures with no locking or atomic operations
  * can be used (see RequestLocal.withThreadConfinedCaching).
  */
+
+// 요청마다 고유한 상태를 저장하기 위한 컨테이너 역할
 public class RequestLocal implements AutoCloseable {
     private static final RequestLocal NO_CACHING = new RequestLocal(BufferSupplier.NO_CACHING);
 
