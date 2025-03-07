@@ -174,9 +174,28 @@ public class FetchRequest extends AbstractRequest {
             return new Builder(allowedVersion, allowedVersion, replicaId, replicaEpoch, maxWait, minBytes, fetchData);
         }
 
+        // BSY: add code
+        public static Builder forBrokerReplica(short allowedVersion, int replicaId, long replicaEpoch, int maxWait, int minBytes,
+                                         Map<TopicPartition, PartitionData> fetchData) {
+            System.out.println("BSY [FetchRequest.java]: call forBrokerReplica()");
+            return new Builder(allowedVersion, allowedVersion, replicaId, replicaEpoch, maxWait, minBytes, fetchData, ApiKeys.BROKER_FETCH);
+        }
+
         public Builder(short minVersion, short maxVersion, int replicaId, long replicaEpoch, int maxWait, int minBytes,
                        Map<TopicPartition, PartitionData> fetchData) {
             super(ApiKeys.FETCH, minVersion, maxVersion);
+            this.replicaId = replicaId;
+            this.replicaEpoch = replicaEpoch;
+            this.maxWait = maxWait;
+            this.minBytes = minBytes;
+            this.toFetch = fetchData;
+        }
+
+        // BSY: add code
+        // AbstractRequest
+        public Builder(short minVersion, short maxVersion, int replicaId, long replicaEpoch, int maxWait, int minBytes,
+                       Map<TopicPartition, PartitionData> fetchData, ApiKeys apiKeys) {
+            super(apiKeys, minVersion, maxVersion);
             this.replicaId = replicaId;
             this.replicaEpoch = replicaEpoch;
             this.maxWait = maxWait;
@@ -335,6 +354,13 @@ public class FetchRequest extends AbstractRequest {
 
     public FetchRequest(FetchRequestData fetchRequestData, short version) {
         super(ApiKeys.FETCH, version);
+        this.data = fetchRequestData;
+        this.metadata = new FetchMetadata(fetchRequestData.sessionId(), fetchRequestData.sessionEpoch());
+    }
+
+    // BSY: add code
+    public FetchRequest(FetchRequestData fetchRequestData, short version, ApiKeys apiKeys) {
+        super(apiKeys, version);
         this.data = fetchRequestData;
         this.metadata = new FetchMetadata(fetchRequestData.sessionId(), fetchRequestData.sessionEpoch());
     }

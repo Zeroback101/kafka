@@ -171,9 +171,10 @@ class RemoteLeaderEndPoint(logPrefix: String,
   }
 
   override def buildFetch(partitions: Map[TopicPartition, PartitionFetchState]): ResultWithPartitions[Option[ReplicaFetch]] = {
-    val partitionsWithError = mutable.Set[TopicPartition]()
+    println("BSY [RemoteLeaderEndPoint.scala]: call buildFetch()")
+    val partitionsWithError = mutable.Set[TopicPartition]() // 에러가 발생한 파티션 추적을 위한 가변 집합 초기화
 
-    val builder = fetchSessionHandler.newBuilder(partitions.size, false)
+    val builder = fetchSessionHandler.newBuilder(partitions.size, false) // 빌더 생성
     partitions.foreachEntry { (topicPartition, fetchState) =>
       // We will not include a replica in the fetch request if it should be throttled.
       if (fetchState.isReadyForFetch && !shouldFollowerThrottle(quota, fetchState, topicPartition)) {
@@ -209,8 +210,9 @@ class RemoteLeaderEndPoint(logPrefix: String,
       } else {
         metadataVersion.fetchRequestVersion
       }
+      // BSY: forBrokerReplica() 로 변경
       val requestBuilder = FetchRequest.Builder
-        .forReplica(version, brokerConfig.brokerId, brokerEpochSupplier(), maxWait, minBytes, fetchData.toSend)
+        .forBrokerReplica(version, brokerConfig.brokerId, brokerEpochSupplier(), maxWait, minBytes, fetchData.toSend)
         .setMaxBytes(maxBytes)
         .removed(fetchData.toForget)
         .replaced(fetchData.toReplace)

@@ -45,6 +45,7 @@ import static org.apache.kafka.common.protocol.types.Type.RECORDS;
 public enum ApiKeys {
     PRODUCE(ApiMessageType.PRODUCE),
     FETCH(ApiMessageType.FETCH),
+    BROKER_FETCH(ApiMessageType.FETCH),
     LIST_OFFSETS(ApiMessageType.LIST_OFFSETS),
     METADATA(ApiMessageType.METADATA),
     LEADER_AND_ISR(ApiMessageType.LEADER_AND_ISR, true),
