@@ -163,6 +163,7 @@ class LocalLeaderEndPoint(sourceBroker: BrokerEndPoint,
 
   override def buildFetch(partitions: Map[TopicPartition, PartitionFetchState]): ResultWithPartitions[Option[ReplicaFetch]] = {
     // Only include replica in the fetch request if it is not throttled.
+    println("BSY [LocalLeaderEndPoint.scala]: call buildFetch()")
     if (quota.isQuotaExceeded) {
       ResultWithPartitions(None, Set.empty)
     } else {

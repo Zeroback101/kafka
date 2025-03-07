@@ -107,11 +107,13 @@ abstract class AbstractFetcherThread(name: String,
   }
 
   override def doWork(): Unit = {
+    println("BSY [AbstractFetcherThread.scala]: call doWork()")
     maybeTruncate()
     maybeFetch()
   }
 
   private def maybeFetch(): Unit = {
+    println("BSY [AbstractFetcherThread.scala]: call maybeFetch()")
     val fetchRequestOpt = inLock(partitionMapLock) {
       val ResultWithPartitions(fetchRequestOpt, partitionsWithError) = leader.buildFetch(partitionStates.partitionStateMap.asScala)
 
